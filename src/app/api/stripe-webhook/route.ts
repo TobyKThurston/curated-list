@@ -39,7 +39,6 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    // ✅ Email YOU
     await transporter.sendMail({
       from: `"Curation Orders" <${process.env.EMAIL_USER}>`,
       to: process.env.NOTIFY_EMAIL || process.env.EMAIL_USER,
@@ -57,7 +56,6 @@ Amount Paid: $${amount}
       `,
     })
 
-    // ✅ Email the CUSTOMER
     if (email) {
       await transporter.sendMail({
         from: `"Columbia Bartending" <${process.env.EMAIL_USER}>`,

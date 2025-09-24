@@ -6,17 +6,20 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 })
 
 type Props = {
-  searchParams: { sid?: string }
+  searchParams?: Record<string, string | string[] | undefined>
 }
 
 export default async function ThankYou({ searchParams }: Props) {
-  const sid = searchParams.sid
+  const sid = typeof searchParams?.sid === 'string' ? searchParams.sid : undefined
+
   if (!sid) {
     return (
       <main className="min-h-screen bg-white text-black flex flex-col justify-center items-center p-6">
         <div className="bg-gray-50 border border-gray-200 rounded-2xl shadow-sm p-6 max-w-md text-center">
           <h1 className="text-2xl font-semibold mb-2">Thank you!</h1>
-          <p className="text-gray-600 mb-4">Payment received. We’ll match it to your event using the Event Number.</p>
+          <p className="text-gray-600 mb-4">
+            Payment received. We’ll match it to your event using the Event Number.
+          </p>
           <Link
             href="/"
             className="inline-block px-5 py-3 rounded-xl bg-black text-white hover:bg-gray-800 transition-colors"

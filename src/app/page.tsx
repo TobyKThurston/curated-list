@@ -5,12 +5,16 @@ import { ArrowRight } from 'lucide-react'
 
 export default function Page() {
   const [loading, setLoading] = useState(false)
-  const [err, setErr] = useState<string|null>(null)
+  const [err, setErr] = useState<string | null>(null)
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault(); setLoading(true); setErr(null)
+    e.preventDefault()
+    setLoading(true)
+    setErr(null)
+
     const form = e.currentTarget
     const data = Object.fromEntries(new FormData(form).entries())
+
     try {
       const r = await fetch('/api/checkout', {
         method: 'POST',
@@ -19,13 +23,22 @@ export default function Page() {
           name: data.name,
           email: data.email,
           event_number: data.event_number,
-          age21: data.age21 === 'on'
-        })
+          age21: data.age21 === 'on',
+        }),
       })
-      const j = await r.json()
-      if (!r.ok) throw new Error(j.error || 'Checkout failed')
+
+      const j: { error?: string; url?: string } = await r.json()
+      if (!r.ok || !j.url) throw new Error(j.error || 'Checkout failed')
       window.location.href = j.url
-    } catch (e:any) { setErr(e.message) } finally { setLoading(false) }
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setErr(e.message)
+      } else {
+        setErr('Checkout failed')
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -48,15 +61,28 @@ export default function Page() {
         >
           <div>
             <label className="block text-sm font-medium mb-1">Name</label>
-            <input name="name" required className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black" />
+            <input
+              name="name"
+              required
+              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black"
+            />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
-            <input type="email" name="email" required className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black" />
+            <input
+              type="email"
+              name="email"
+              required
+              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black"
+            />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Event Number</label>
-            <input name="event_number" required className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black" />
+            <input
+              name="event_number"
+              required
+              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black"
+            />
           </div>
           <label className="inline-flex items-center gap-2 text-sm">
             <input type="checkbox" name="age21" required /> I am 21+ (ID will be verified)
@@ -77,9 +103,9 @@ export default function Page() {
       {/* Explanations with subtle animations */}
       <section className="max-w-5xl mx-auto mt-24 px-6 grid md:grid-cols-3 gap-6">
         {[
-          { title: "Effortless", desc: "Skip the guesswork. We’ve curated exactly what you need for your event." },
-          { title: "Reliable", desc: "Handled by trusted partners. Delivery and ID checks guaranteed." },
-          { title: "Elegant", desc: "Designed to be simple, transparent, and stress-free." },
+          { title: 'Effortless', desc: 'Skip the guesswork. We’ve curated exactly what you need for your event.' },
+          { title: 'Reliable', desc: 'Handled by trusted partners. Delivery and ID checks guaranteed.' },
+          { title: 'Elegant', desc: 'Designed to be simple, transparent, and stress-free.' },
         ].map((box, i) => (
           <motion.div
             key={box.title}

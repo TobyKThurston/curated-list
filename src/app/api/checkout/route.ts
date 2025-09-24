@@ -5,7 +5,7 @@ import { z } from 'zod'
 export const runtime = 'nodejs'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-08-27.basil' as any, // pin to your Stripe version
+  apiVersion: '2025-08-27.basil' as any,
 })
 
 const Body = z.object({
@@ -29,8 +29,6 @@ export async function POST(req: NextRequest) {
         line_items: [{ price: process.env.PRICE_CURATED!, quantity: 1 }],
         success_url: `${process.env.BASE_URL}/thank-you?sid={CHECKOUT_SESSION_ID}`,
         cancel_url: `${process.env.BASE_URL}/`,
-
-        // ✅ Attach metadata to the PaymentIntent
         payment_intent_data: {
           metadata: {
             event_number: body.event_number,
