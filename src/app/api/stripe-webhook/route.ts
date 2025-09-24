@@ -14,8 +14,11 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event
   try {
     event = stripe.webhooks.constructEvent(raw, sig, process.env.STRIPE_WEBHOOK_SECRET!)
-  } catch (e: any) {
-    return new Response(`Webhook Error: ${e.message}`, { status: 400 })
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return new Response(`Webhook Error: ${e.message}`, { status: 400 })
+    }
+    return new Response(`Webhook Error: Unknown`, { status: 400 })
   }
 
   if (event.type === 'checkout.session.completed') {
