@@ -1,103 +1,103 @@
-import Image from "next/image";
+'use client'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { ArrowRight } from 'lucide-react'
 
-export default function Home() {
+export default function Page() {
+  const [loading, setLoading] = useState(false)
+  const [err, setErr] = useState<string|null>(null)
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); setLoading(true); setErr(null)
+    const form = e.currentTarget
+    const data = Object.fromEntries(new FormData(form).entries())
+    try {
+      const r = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          event_number: data.event_number,
+          age21: data.age21 === 'on'
+        })
+      })
+      const j = await r.json()
+      if (!r.ok) throw new Error(j.error || 'Checkout failed')
+      window.location.href = j.url
+    } catch (e:any) { setErr(e.message) } finally { setLoading(false) }
+  }
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-white text-black flex flex-col">
+      {/* Hero Section */}
+      <header className="max-w-4xl mx-auto py-20 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+          The Curated Alcohol List
+        </h1>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          A simple, elegant way to prepare for your event. One purchase, everything handled.
+        </p>
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* Checkout Form */}
+      <main className="max-w-md mx-auto w-full px-6">
+        <form
+          onSubmit={onSubmit}
+          className="bg-gray-50 border border-gray-200 rounded-2xl shadow-sm p-6 space-y-4"
+        >
+          <div>
+            <label className="block text-sm font-medium mb-1">Name</label>
+            <input name="name" required className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Email</label>
+            <input type="email" name="email" required className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Event Number</label>
+            <input name="event_number" required className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-black" />
+          </div>
+          <label className="inline-flex items-center gap-2 text-sm">
+            <input type="checkbox" name="age21" required /> I am 21+ (ID will be verified)
+          </label>
+          {err && <p className="text-sm text-red-600">{err}</p>}
+          <button
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-black text-white hover:bg-gray-800 transition-colors"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+            {loading ? 'Redirecting…' : 'Buy Now'} <ArrowRight className="w-4 h-4" />
+          </button>
+          <p className="text-xs text-gray-500 text-center">
+            We are not the alcohol retailer. Orders are fulfilled by licensed partners. 21+ only.
+          </p>
+        </form>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Explanations with subtle animations */}
+      <section className="max-w-5xl mx-auto mt-24 px-6 grid md:grid-cols-3 gap-6">
+        {[
+          { title: "Effortless", desc: "Skip the guesswork. We’ve curated exactly what you need for your event." },
+          { title: "Reliable", desc: "Handled by trusted partners. Delivery and ID checks guaranteed." },
+          { title: "Elegant", desc: "Designed to be simple, transparent, and stress-free." },
+        ].map((box, i) => (
+          <motion.div
+            key={box.title}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: i * 0.2 }}
+            viewport={{ once: true }}
+            className="bg-gray-50 border border-gray-200 rounded-2xl shadow-sm p-6"
+          >
+            <h3 className="text-lg font-semibold mb-2">{box.title}</h3>
+            <p className="text-gray-600 text-sm">{box.desc}</p>
+          </motion.div>
+        ))}
+      </section>
+
+      <footer className="mt-24 mb-6 text-center text-xs text-gray-400">
+        © {new Date().getFullYear()} Columbia Bartending
       </footer>
     </div>
-  );
+  )
 }
