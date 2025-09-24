@@ -1,48 +1,61 @@
-import { NextRequest } from 'next/server'
-import Stripe from 'stripe'
-import nodemailer from 'nodemailer'
+import { NextRequest } from "next/server";
+import Stripe from "stripe";
+import nodemailer from "nodemailer";
 
-export const runtime = 'nodejs'
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2025-08-27.basil' as any,
-  })
-  const sig = req.headers.get('stripe-signature') as string
-  const raw = Buffer.from(await req.arrayBuffer())
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+    apiVersion: "2025-08-27.basil" as Stripe.LatestApiVersion,
+  });
 
-  let event: Stripe.Event
-  try {
-    event = stripe.webhooks.constructEvent(raw, sig, process.env.STRIPE_WEBHOOK_SECRET!)
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      return new Response(`Webhook Error: ${e.message}`, { status: 400 })
-    }
-    return new Response(`Webhook Error: Unknown`, { status: 400 })
+  const sig = req.headers.get("stripe-signature");
+  if (!sig) {
+    return new Response("Missing Stripe signature", { status: 400 });
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const s = event.data.object as Stripe.Checkout.Session
-    const pi = await stripe.paymentIntents.retrieve(s.payment_intent as string)
+  const raw = Buffer.from(await req.arrayBuffer());
 
-    const name = pi.metadata.name
-    const eventNumber = pi.metadata.event_number
-    const age21 = pi.metadata.age21
-    const email = s.customer_email
-    const amount = (s.amount_total ?? 0) / 100
+  let event: Stripe.Event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      raw,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET as string
+    );
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return new Response(`Webhook Error: ${e.message}`, { status: 400 });
+    }
+    return new Response("Webhook Error: Unknown", { status: 400 });
+  }
 
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+
+    // PaymentIntent retrieval
+    const paymentIntent = await stripe.paymentIntents.retrieve(
+      session.payment_intent as string
+    );
+
+    const { name, event_number: eventNumber, age21 } = paymentIntent.metadata;
+    const email = session.customer_email ?? undefined;
+    const amount = (session.amount_total ?? 0) / 100;
+
+    // Nodemailer setup
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-    })
+    });
 
+    // Notify internal team
     await transporter.sendMail({
       from: `"Curation Orders" <${process.env.EMAIL_USER}>`,
       to: process.env.NOTIFY_EMAIL || process.env.EMAIL_USER,
-      subject: '🎉 New Alcohol Curation Order Paid',
+      subject: "🎉 New Alcohol Curation Order Paid",
       text: `
 A new order has been completed:
 
@@ -51,16 +64,17 @@ Email: ${email}
 Event Number: ${eventNumber}
 Age 21+: ${age21}
 
-Stripe Session ID: ${s.id}
+Stripe Session ID: ${session.id}
 Amount Paid: $${amount}
       `,
-    })
+    });
 
+    // Confirmation email to customer
     if (email) {
       await transporter.sendMail({
         from: `"Columbia Bartending" <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: 'Your Curated Alcohol List Order Confirmation',
+        subject: "Your Curated Alcohol List Order Confirmation",
         text: `
 Hi ${name},
 
@@ -74,11 +88,11 @@ If you have any questions, just reply to this email.
 
 – Columbia Bartending
         `,
-      })
+      });
     }
 
-    console.log('✅ Sent order emails (to you + customer)')
+    console.log("✅ Sent order emails (to you + customer)");
   }
 
-  return new Response('ok', { status: 200 })
+  return new Response("ok", { status: 200 });
 }

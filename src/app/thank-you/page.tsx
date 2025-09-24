@@ -1,16 +1,17 @@
-import Link from 'next/link'
-import Stripe from 'stripe'
+import Link from "next/link";
+import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-08-27.basil' as any,
-})
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: "2025-08-27.basil" as Stripe.LatestApiVersion,
+});
 
 type Props = {
-  searchParams?: Record<string, string | string[] | undefined>
-}
+  searchParams?: Record<string, string | string[] | undefined>;
+};
 
 export default async function ThankYou({ searchParams }: Props) {
-  const sid = typeof searchParams?.sid === 'string' ? searchParams.sid : undefined
+  const sid =
+    typeof searchParams?.sid === "string" ? searchParams.sid : undefined;
 
   if (!sid) {
     return (
@@ -18,7 +19,8 @@ export default async function ThankYou({ searchParams }: Props) {
         <div className="bg-gray-50 border border-gray-200 rounded-2xl shadow-sm p-6 max-w-md text-center">
           <h1 className="text-2xl font-semibold mb-2">Thank you!</h1>
           <p className="text-gray-600 mb-4">
-            Payment received. We’ll match it to your event using the Event Number.
+            Payment received. We’ll match it to your event using the Event
+            Number.
           </p>
           <Link
             href="/"
@@ -28,18 +30,18 @@ export default async function ThankYou({ searchParams }: Props) {
           </Link>
         </div>
       </main>
-    )
+    );
   }
 
   // Fetch the checkout session & PaymentIntent from Stripe
-  const session = await stripe.checkout.sessions.retrieve(sid)
+  const session = await stripe.checkout.sessions.retrieve(sid);
   const pi = session.payment_intent
     ? await stripe.paymentIntents.retrieve(session.payment_intent as string)
-    : null
+    : null;
 
-  const name = pi?.metadata.name ?? 'Customer'
-  const eventNumber = pi?.metadata.event_number ?? 'N/A'
-  const amount = (session.amount_total ?? 0) / 100
+  const name = pi?.metadata.name ?? "Customer";
+  const eventNumber = pi?.metadata.event_number ?? "N/A";
+  const amount = (session.amount_total ?? 0) / 100;
 
   return (
     <div className="min-h-screen bg-white text-black flex flex-col">
@@ -54,7 +56,8 @@ export default async function ThankYou({ searchParams }: Props) {
             Your Event Number: <strong>{eventNumber}</strong>
           </p>
           <p className="text-gray-500 text-sm">
-            We’ll match your order to this event. Our agency partners will handle logistics.
+            We’ll match your order to this event. Our agency partners will
+            handle logistics.
           </p>
           <Link
             href="/"
@@ -69,5 +72,5 @@ export default async function ThankYou({ searchParams }: Props) {
         © {new Date().getFullYear()} Columbia Bartending
       </footer>
     </div>
-  )
+  );
 }

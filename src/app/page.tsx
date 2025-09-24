@@ -13,7 +13,9 @@ export default function Page() {
     setErr(null)
 
     const form = e.currentTarget
-    const data = Object.fromEntries(new FormData(form).entries())
+    const data = Object.fromEntries(
+      new FormData(form).entries()
+    ) as Record<string, string>
 
     try {
       const r = await fetch('/api/checkout', {
