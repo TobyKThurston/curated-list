@@ -4,14 +4,8 @@ import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 
-// 👇 Required so Next.js doesn’t parse body before Stripe signature check
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export async function POST(req: NextRequest) {
+  // ✅ Drop the broken API version override
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
   const sig = req.headers.get("stripe-signature");
@@ -19,25 +13,29 @@ export async function POST(req: NextRequest) {
     return new Response("Missing Stripe signature", { status: 400 });
   }
 
-  const rawBody = Buffer.from(await req.arrayBuffer());
+  const raw = Buffer.from(await req.arrayBuffer());
 
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(
-      rawBody,
+      raw,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
-  } catch (err: any) {
-    console.error("❌ Webhook signature verification failed:", err.message);
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.error("❌ Webhook signature verification failed:", e.message);
+      return new Response(`Webhook Error: ${e.message}`, { status: 400 });
+    }
+    console.error("❌ Unknown webhook error");
+    return new Response("Webhook Error: Unknown", { status: 400 });
   }
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
     try {
-      // Retrieve payment intent for metadata
+      // Retrieve payment intent
       const paymentIntent = await stripe.paymentIntents.retrieve(
         session.payment_intent as string
       );
@@ -46,7 +44,7 @@ export async function POST(req: NextRequest) {
       const email = session.customer_email ?? undefined;
       const amount = (session.amount_total ?? 0) / 100;
 
-      // Nodemailer transporter
+      // Nodemailer setup
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -55,7 +53,7 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // Internal notification
+      // Notify internal team
       await transporter.sendMail({
         from: `"Curation Orders" <${process.env.EMAIL_USER}>`,
         to: process.env.NOTIFY_EMAIL || process.env.EMAIL_USER,
@@ -73,7 +71,7 @@ Amount Paid: $${amount}
         `,
       });
 
-      // Customer confirmation
+      // Confirmation email to customer
       if (email) {
         await transporter.sendMail({
           from: `"Columbia Bartending" <${process.env.EMAIL_USER}>`,
@@ -95,7 +93,7 @@ If you have any questions, just reply to this email.
         });
       }
 
-      console.log("✅ Sent order emails (internal + customer)");
+      console.log("✅ Sent order emails (to you + customer)");
     } catch (err) {
       console.error("❌ Error handling checkout.session.completed:", err);
     }
