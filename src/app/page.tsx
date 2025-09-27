@@ -124,7 +124,7 @@ export default function Page() {
       </section>
 
       <footer className="mt-24 mb-6 text-center text-xs text-gray-400">
-        © {new Date().getFullYear()} Columbia Bartending
+        © {new Date().getFullYear()} GlassListNYC
       </footer>
     </div>
   )

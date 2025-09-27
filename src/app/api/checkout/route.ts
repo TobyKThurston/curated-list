@@ -4,12 +4,9 @@ import { z } from "zod";
 
 export const runtime = "nodejs";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  // match the version your SDK expects instead of using `as any`
-  apiVersion: "2025-08-27.basil" as Stripe.LatestApiVersion,
-});
+// ✅ use your account's default API version OR pin to a real one like "2023-10-16"
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-// Zod schema for request body validation
 const Body = z.object({
   name: z.string().min(1).max(120),
   email: z.string().email(),
@@ -56,7 +53,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (err instanceof Stripe.errors.StripeError) {
+    // Stripe errors get caught as generic Error, not `Stripe.errors.StripeError`
+    if (err instanceof Error && "type" in err) {
       console.error("Stripe error:", err.message);
       return NextResponse.json(
         { error: "Payment processing error" },
