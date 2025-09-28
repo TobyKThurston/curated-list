@@ -46,20 +46,49 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-white text-black flex flex-col">
       {/* Hero Section */}
-      <header className="max-w-4xl mx-auto py-20 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-          The Curated Alcohol List
-        </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          A simple, elegant way to prepare for your event. One purchase, everything handled.
-        </p>
+      <header className="max-w-4xl mx-auto py-16 text-center px-6">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-4xl md:text-5xl font-bold tracking-tight"
+        >
+          Liquor & Bar Coordination
+        </motion.h1>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-xl md:text-2xl text-gray-700 mt-1 font-semibold"
+        >
+          for Your CBA Event.
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-sm italic text-gray-500 mt-3"
+        >
+          Powered by GlasslistNYC
+        </motion.p>
       </header>
 
+      {/* Intro Paragraph Above Form */}
+      <section className="max-w-md mx-auto px-6 text-gray-700 text-center mb-6">
+        <p>
+          Our team works directly with your bartenders to plan & deliver everything you need for your event, exactly when you want it.
+        </p>
+      </section>
+
       {/* Checkout Form */}
-      <main className="max-w-md mx-auto w-full px-6">
-        <form
+      <main className="max-w-md mx-auto w-full px-6 mb-8">
+        <motion.form
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
           onSubmit={onSubmit}
-          className="bg-gray-50 border border-gray-200 rounded-2xl shadow-sm p-6 space-y-4"
+          className="bg-gray-50 border border-gray-200 rounded-2xl shadow-md p-6 space-y-4"
         >
           <div>
             <label className="block text-sm font-medium mb-1">Name</label>
@@ -87,7 +116,7 @@ export default function Page() {
             />
           </div>
           <label className="inline-flex items-center gap-2 text-sm">
-            <input type="checkbox" name="age21" required /> I am 21+ (ID will be verified)
+            <input type="checkbox" name="age21" required /> I am at least 21 years of age
           </label>
           {err && <p className="text-sm text-red-600">{err}</p>}
           <button
@@ -96,34 +125,67 @@ export default function Page() {
           >
             {loading ? 'Redirecting…' : 'Buy Now'} <ArrowRight className="w-4 h-4" />
           </button>
-          <p className="text-xs text-gray-500 text-center">
-            We are not the alcohol retailer. Orders are fulfilled by licensed partners. 21+ only.
-          </p>
-        </form>
+        </motion.form>
       </main>
 
-      {/* Explanations with subtle animations */}
-      <section className="max-w-5xl mx-auto mt-24 px-6 grid md:grid-cols-3 gap-6">
-        {[
-          { title: 'Effortless', desc: 'Skip the guesswork. We’ve curated exactly what you need for your event.' },
-          { title: 'Reliable', desc: 'Handled by trusted partners. Delivery and ID checks guaranteed.' },
-          { title: 'Elegant', desc: 'Designed to be simple, transparent, and stress-free.' },
-        ].map((box, i) => (
-          <motion.div
-            key={box.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: i * 0.2 }}
-            viewport={{ once: true }}
-            className="bg-gray-50 border border-gray-200 rounded-2xl shadow-sm p-6"
-          >
-            <h3 className="text-lg font-semibold mb-2">{box.title}</h3>
-            <p className="text-gray-600 text-sm">{box.desc}</p>
-          </motion.div>
-        ))}
+      {/* Details Section Below Form */}
+      <section className="max-w-2xl mx-auto mt-8 px-6 text-gray-700">
+        <p className="font-medium mb-2">This means:</p>
+        <ul className="list-disc pl-6 space-y-3 mb-8 leading-relaxed">
+          <li>No shopping. No guesswork. No last-minute errands.</li>
+          <li>Spirits, garnishes, mixers & ice dropped right at your door.</li>
+          <li>Delivery exactly when you want it, whether that is weeks or hours before guests arrive.</li>
+          <li>Your bartender walks in ready to go and you get to enjoy your own party.</li>
+        </ul>
+        <p className="font-semibold mt-6">
+          CBA Clients receive $50 off every order. This pricing is already included in your quote from the Columbia Bartending Agency.
+        </p>
       </section>
 
-      <footer className="mt-24 mb-6 text-center text-xs text-gray-400">
+      {/* How it Works Section */}
+      <section className="max-w-3xl mx-auto mt-16 px-6">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-2xl font-bold mb-6 text-center"
+        >
+          How it Works
+        </motion.h2>
+        <div className="space-y-6">
+          {[
+            'Confirm your delivery with your CBA Event Reference Number (ex: 000H).',
+            'Pay our discounted service fee, already included in your quote from CBA.',
+            'We work with your CBA bartender to build 3 potential carts, from affordable liquors to top-shelf spirits. We keep working until your cart is perfect.',
+            'Schedule your delivery.',
+            'Enjoy your exceptional event.',
+          ].map((step, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: i * 0.2 }}
+              viewport={{ once: true }}
+              className={`flex gap-4 items-start p-4 rounded-lg ${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
+            >
+              <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-black text-white font-semibold">
+                {i + 1}
+              </div>
+              <p className="text-gray-700 leading-relaxed">{step}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Disclaimer Section */}
+      <section className="max-w-3xl mx-auto mt-12 px-6 text-gray-500 text-sm text-center border-t pt-6">
+        <p>
+          <span className="font-semibold">Disclaimer:</span> The Glasslist NYC does not sell or distribute alcoholic beverages. All alcohol orders are processed and fulfilled exclusively by duly licensed third-party retailers or distributors.
+        </p>
+      </section>
+
+      <footer className="mt-16 mb-6 text-center text-xs text-gray-400">
         © {new Date().getFullYear()} GlassListNYC
       </footer>
     </div>
