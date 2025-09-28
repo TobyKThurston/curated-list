@@ -153,10 +153,10 @@ export default function Page() {
           <li>No shopping. No guesswork. No last-minute errands.</li>
           <li>Spirits, garnishes, mixers & ice dropped right at your door.</li>
           <li>Delivery exactly when you want it, whether that is weeks or hours before guests arrive.</li>
-          <li>Your bartender walks in ready to go — and you get to enjoy your own party.</li>
+          <li>Your bartender walks in ready to go and you get to enjoy your own party.</li>
         </ul>
         <p className="font-semibold mt-6">
-          CBA Clients receive $50 off every order. This pricing is already included in your quote from the Columbia Bartending Agency.
+        Our pricing is already included in your quote from the Columbia Bartending Agency.
         </p>
       </section>
 
@@ -177,7 +177,7 @@ export default function Page() {
             'Pay our discounted service fee, already included in your quote from CBA.',
             'We work with your CBA bartender to build 3 potential carts, from affordable liquors to top-shelf spirits. We keep working until your cart is perfect.',
             'Schedule your delivery.',
-            'Enjoy your exceptional event.',
+            'Enjoy your event.',
           ].map((step, i) => (
             <motion.div
               key={i}

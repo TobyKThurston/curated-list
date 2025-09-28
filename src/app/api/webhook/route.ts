@@ -5,7 +5,6 @@ import nodemailer from "nodemailer";
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  // ✅ Drop the broken API version override
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
   const sig = req.headers.get("stripe-signature");
@@ -80,15 +79,14 @@ Amount Paid: $${amount}
           text: `
 Hi ${name},
 
-Thank you for your order with Columbia Bartending! 
+Thank you for confirming your liquor delivery for event ${eventNumber} with the Columbia Bartending Agency.
 
-We’ve received your payment of $${amount}.
-Your Event Number is: ${eventNumber}.
+The team at Glasslist NYC is currently working with your bartender to build your liquor package & handle logistics. We will reach out to share package options & confirm delivery details within 48 hours.
 
-We’ll match your order to your event and handle logistics.
-If you have any questions, just reply to this email.
+If you have any questions, please direct them to reid@columbiabartending.com.
 
-– Columbia Bartending
+Best,
+Your teams at Glasslist NYC & the Columbia Bartending Agency
           `,
         });
       }
