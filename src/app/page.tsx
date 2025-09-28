@@ -44,48 +44,48 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col">
-      {/* Top Navbar - Solid Black, Slimmer */}
+    <div className="min-h-screen bg-white text-black flex flex-col relative">
+      {/* Top Navbar */}
       <motion.nav
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
         className="w-full fixed top-0 left-0 bg-black text-white h-12 flex items-center px-6 shadow-md z-50"
       >
-        <div className="font-bold tracking-wide text-lg">
-          Glasslist NYC
-        </div>
+        <div className="font-bold tracking-wide text-lg">Glasslist NYC</div>
       </motion.nav>
 
-      {/* Hero Section with Shorter Gradient */}
-      <header className="w-full bg-gradient-to-b from-black via-gray-900/80 to-white text-center text-white pt-28 pb-16 px-6">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-5xl md:text-6xl font-bold tracking-tight"
-        >
-          Liquor & Bar Coordination
-        </motion.h1>
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-2xl md:text-3xl text-gray-200 mt-2 font-semibold"
-        >
-          for Your CBA Event.
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="text-sm italic text-gray-300 mt-4"
-        >
-          Powered by Glasslist NYC
-        </motion.p>
+      {/* Hero Section - simple white background */}
+      <header className="w-full relative text-center text-black pt-28 pb-16 px-6">
+        <div className="max-w-3xl mx-auto px-6">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-5xl md:text-6xl font-bold tracking-tight"
+          >
+            Liquor & Bar Coordination
+          </motion.h1>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-2xl md:text-3xl text-gray-700 mt-2 font-semibold"
+          >
+            for Your CBA Event.
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="text-sm italic text-gray-600 mt-4"
+          >
+            Powered by Glasslist NYC
+          </motion.p>
+        </div>
       </header>
 
-      {/* Checkout Form - fully in white section */}
+      {/* Checkout Form */}
       <main className="max-w-md mx-auto w-full px-6 mt-6 relative z-10">
         <motion.form
           initial={{ opacity: 0, y: 30 }}
@@ -133,7 +133,7 @@ export default function Page() {
         </motion.form>
       </main>
 
-      {/* Intro Paragraph Below Form */}
+      {/* Intro Paragraph */}
       <section className="max-w-2xl mx-auto mt-12 px-6 text-gray-700 text-center">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -156,11 +156,11 @@ export default function Page() {
           <li>Your bartender walks in ready to go and you get to enjoy your own party.</li>
         </ul>
         <p className="font-semibold mt-6">
-        Our pricing is already included in your quote from the Columbia Bartending Agency.
+          Our pricing is already included in your quote from the Columbia Bartending Agency.
         </p>
       </section>
 
-      {/* How it Works Section */}
+      {/* How it Works */}
       <section className="max-w-3xl mx-auto mt-16 px-6">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -185,7 +185,9 @@ export default function Page() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: i * 0.2 }}
               viewport={{ once: true }}
-              className={`flex gap-4 items-start p-4 rounded-lg ${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
+              className={`flex gap-4 items-start p-4 rounded-lg ${
+                i % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+              }`}
             >
               <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-black text-white font-semibold">
                 {i + 1}
@@ -196,7 +198,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Disclaimer Section */}
+      {/* Disclaimer */}
       <section className="max-w-3xl mx-auto mt-12 px-6 text-gray-500 text-sm text-center border-t pt-6">
         <p>
           <span className="font-semibold">Disclaimer:</span> The Glasslist NYC does not sell or distribute alcoholic beverages. All alcohol orders are processed and fulfilled exclusively by duly licensed third-party retailers or distributors.
