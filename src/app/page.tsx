@@ -45,13 +45,25 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-white text-black flex flex-col">
-      {/* Hero Section */}
-      <header className="max-w-4xl mx-auto py-16 text-center px-6">
+      {/* Top Navbar - Solid Black, Slimmer */}
+      <motion.nav
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="w-full fixed top-0 left-0 bg-black text-white h-12 flex items-center px-6 shadow-md z-50"
+      >
+        <div className="font-bold tracking-wide text-lg">
+          Glasslist NYC
+        </div>
+      </motion.nav>
+
+      {/* Hero Section with Shorter Gradient */}
+      <header className="w-full bg-gradient-to-b from-black via-gray-900/80 to-white text-center text-white pt-28 pb-16 px-6">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-4xl md:text-5xl font-bold tracking-tight"
+          className="text-5xl md:text-6xl font-bold tracking-tight"
         >
           Liquor & Bar Coordination
         </motion.h1>
@@ -59,7 +71,7 @@ export default function Page() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-xl md:text-2xl text-gray-700 mt-1 font-semibold"
+          className="text-2xl md:text-3xl text-gray-200 mt-2 font-semibold"
         >
           for Your CBA Event.
         </motion.h2>
@@ -67,28 +79,21 @@ export default function Page() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-sm italic text-gray-500 mt-3"
+          className="text-sm italic text-gray-300 mt-4"
         >
-          Powered by GlasslistNYC
+          Powered by Glasslist NYC
         </motion.p>
       </header>
 
-      {/* Intro Paragraph Above Form */}
-      <section className="max-w-md mx-auto px-6 text-gray-700 text-center mb-6">
-        <p>
-          Our team works directly with your bartenders to plan & deliver everything you need for your event, exactly when you want it.
-        </p>
-      </section>
-
-      {/* Checkout Form */}
-      <main className="max-w-md mx-auto w-full px-6 mb-8">
+      {/* Checkout Form - fully in white section */}
+      <main className="max-w-md mx-auto w-full px-6 mt-6 relative z-10">
         <motion.form
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           onSubmit={onSubmit}
-          className="bg-gray-50 border border-gray-200 rounded-2xl shadow-md p-6 space-y-4"
+          className="bg-gray-50 border border-gray-200 rounded-2xl shadow-xl p-6 space-y-4"
         >
           <div>
             <label className="block text-sm font-medium mb-1">Name</label>
@@ -128,14 +133,27 @@ export default function Page() {
         </motion.form>
       </main>
 
-      {/* Details Section Below Form */}
-      <section className="max-w-2xl mx-auto mt-8 px-6 text-gray-700">
+      {/* Intro Paragraph Below Form */}
+      <section className="max-w-2xl mx-auto mt-12 px-6 text-gray-700 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-lg text-gray-600"
+        >
+          Our team works directly with your bartenders to plan & deliver everything you need for your event, exactly when you want it.
+        </motion.p>
+      </section>
+
+      {/* Details Section */}
+      <section className="max-w-2xl mx-auto mt-10 px-6 text-gray-700">
         <p className="font-medium mb-2">This means:</p>
         <ul className="list-disc pl-6 space-y-3 mb-8 leading-relaxed">
           <li>No shopping. No guesswork. No last-minute errands.</li>
           <li>Spirits, garnishes, mixers & ice dropped right at your door.</li>
           <li>Delivery exactly when you want it, whether that is weeks or hours before guests arrive.</li>
-          <li>Your bartender walks in ready to go and you get to enjoy your own party.</li>
+          <li>Your bartender walks in ready to go — and you get to enjoy your own party.</li>
         </ul>
         <p className="font-semibold mt-6">
           CBA Clients receive $50 off every order. This pricing is already included in your quote from the Columbia Bartending Agency.
@@ -186,7 +204,7 @@ export default function Page() {
       </section>
 
       <footer className="mt-16 mb-6 text-center text-xs text-gray-400">
-        © {new Date().getFullYear()} GlassListNYC
+        © {new Date().getFullYear()} GlassList NYC
       </footer>
     </div>
   )
