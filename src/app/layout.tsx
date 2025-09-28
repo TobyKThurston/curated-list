@@ -4,6 +4,9 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Curated Alcohol List',
   description: 'Checkout for Columbia Bartending curated list',
+  icons: {
+    icon: '/favicon.png', // points to public/favicon.png
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
