@@ -155,9 +155,6 @@ export default function Page() {
           <li>Delivery exactly when you want it, whether that is weeks or hours before guests arrive.</li>
           <li>Your bartender walks in ready to go and you get to enjoy your own party.</li>
         </ul>
-        <p className="font-semibold mt-6">
-          Our pricing is already included in your quote from the Columbia Bartending Agency.
-        </p>
       </section>
 
       {/* How it Works */}
@@ -174,7 +171,7 @@ export default function Page() {
         <div className="space-y-6">
           {[
             'Confirm your delivery with your CBA Event Reference Number (ex: 000H).',
-            'Pay our discounted service fee, already included in your quote from CBA.',
+            'Pay our service fee, exclusively discounted for CBA clients.',
             'We work with your CBA bartender to build 3 potential carts, from affordable liquors to top-shelf spirits. We keep working until your cart is perfect.',
             'Schedule your delivery.',
             'Enjoy your event.',
